@@ -111,7 +111,9 @@ Build one executable:
 ./dist/why-here --demo --language en
 ```
 
-The executable includes Python and Qt but still depends on Linux system libraries. Building on a newer distribution does not guarantee compatibility with older ones. `build/` and `dist/` are excluded from Git; binaries belong in GitHub Releases. A standalone executable does not install its own menu entry or autostart integration.
+The executable includes Python and Qt but still depends on Linux system libraries. Building on a newer distribution does not guarantee compatibility with older ones. `build/` and `dist/` are excluded from Git; binaries belong in GitHub Releases. A standalone executable does not install its own menu entry; autostart is configured from the app settings.
+
+Create a release by pushing a version tag: `git tag v0.2.0 && git push origin v0.2.0`. The workflow checks that the tag matches `pyproject.toml`, runs the tests and publishes the binary with its SHA-256 checksum.
 
 ## Uninstall
 
