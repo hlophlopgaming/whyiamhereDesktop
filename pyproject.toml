@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "why-am-i-here-kde"
-version = "0.3.0"
+version = "0.3.1"
 description = "Purpose and time limits for applications on KDE Plasma 6"
 readme = "README.md"
 requires-python = ">=3.10"

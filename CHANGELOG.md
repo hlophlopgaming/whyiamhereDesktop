@@ -5,6 +5,14 @@ All notable changes are documented here. The project follows
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-10-06
+
+### Added
+
+- Application version displayed at the bottom left of the settings window.
+- Bash installer for a KDE menu entry, included in release archives.
+- Repository instructions for coding agents.
+
 ## [0.3.0] - 2026-10-06
 
 ### Added
@@ -33,7 +41,8 @@ All notable changes are documented here. The project follows
 - Initial Plasma 6 / Wayland application with KWin detection, shared sessions,
   countdown reminders, tray controls, autostart and normal window closing.
 
-[Unreleased]: https://github.com/hlophlopgaming/whyiamhereDesktop/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/hlophlopgaming/whyiamhereDesktop/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/hlophlopgaming/whyiamhereDesktop/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/hlophlopgaming/whyiamhereDesktop/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/hlophlopgaming/whyiamhereDesktop/releases/tag/v0.2.0
 [0.1.0]: https://github.com/hlophlopgaming/whyiamhereDesktop/releases/tag/v0.1.0
