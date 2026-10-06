@@ -18,8 +18,9 @@ QTest.mouseClick(next(b for b in c.forms[key].findChildren(QPushButton) if b.tex
 assert c.forms[key].minutes.value() == 5
 c.forms[key].reject()
 assert c.engine.sessions[key].deadline is None
-c.show_pending()
 assert c.forms[key].isVisible()
+assert c.forms[key].windowFlags() & Qt.WindowStaysOnTopHint
+c.show_pending()
 c.start_session(key, "Проверка GUI", 1)
 assert c.goals(key)[0] == "Проверка GUI"
 assert c.reminders[key].windowFlags() & Qt.WindowDoesNotAcceptFocus

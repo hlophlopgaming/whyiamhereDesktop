@@ -74,6 +74,7 @@ class SessionsTest(unittest.TestCase):
 	def test_dismiss_pending(self):
 		e = self.engine
 		e.sync([window("1"), window("2", "beta")])
+		self.assertEqual(e.blocks(), [{"action": "block", "id": "1", "app": "desktop:alpha"}, {"action": "block", "id": "2", "app": "desktop:beta"}])
 		e.dismiss_pending("desktop:alpha", "windows")
 		self.assertIsNone(e.sessions["desktop:alpha"].deadline)
 		e.dismiss_pending("desktop:alpha", "kill")

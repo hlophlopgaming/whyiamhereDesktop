@@ -15,7 +15,8 @@ QT_QPA_PLATFORM=offscreen .venv/bin/python -m tests.english_smoke
 The unit suite covers session grouping, independent deadlines, last-window cleanup,
 one-time warnings, manual ending, unanswered-form dismissal, tracking cancellation,
 application IDs ending in `.desktop`, process-tree isolation, protected/shared
-processes, and translation catalogue coverage.
+processes, goal history, generated autostart entries and translation catalogue
+coverage.
 
 GUI checks exercise forms, reminders, both languages, bundled icons, the tray's
 actions, safe demo ending and startup without an automatic goal form. Offscreen
@@ -42,7 +43,9 @@ Each KWin test creates two windows of a uniquely identified test app and one
 control window. It uses its own D-Bus service and may run alongside the utility.
 The default test sends ordinary close requests. `--kill` verifies SIGKILL of a
 resident test app; `--dismiss` closes the actual unanswered goal form. The control
-app must survive. Cleanup affects only test-owned child processes.
+app must survive. The tests also verify that pending windows are minimized,
+restored after answering and that KWin activates the goal form. Cleanup affects
+only test-owned child processes.
 
 Тесты KWin создают отдельные тестовые программы и используют собственный D-Bus
 сервис. Пользовательские приложения не выбираются. Проверяются обычное закрытие,
@@ -53,10 +56,10 @@ SIGKILL и закрытие формы без ответа; контрольна
 On 2026-10-06, the following passed locally on EndeavourOS, KDE Plasma 6.7.4,
 Wayland, Python 3.14 and PySide6 6.11.2:
 
-- 12 unit tests and Russian/English GUI smoke checks.
+- 14 unit tests and Russian/English GUI smoke checks.
 - All three real KWin test modes.
-- Per-user installation, desktop-file validation, autostart file enable/disable,
-  and uninstall with KWin script removal.
+- Python wheel and entry point creation, desktop-file validation and autostart
+  file enable/disable.
 - Standalone PyInstaller executable startup from outside the source directory,
   including English CLI help and the Wayland demo.
 
@@ -64,7 +67,7 @@ The GitHub workflow runs the unit and offscreen checks on Ubuntu 24.04 / Python
 3.12. Its first remote execution will happen after the repository is published;
 it has not been run on GitHub during local preparation.
 
-12 тестов и реальные проверки KWin прошли локально. Workflow подготовлен,
+14 тестов и реальные проверки KWin прошли локально. Workflow подготовлен,
 но запуск на GitHub до публикации не выполнялся.
 
 ## Manual checks still needed / Ручная проверка
@@ -76,5 +79,5 @@ it has not been run on GitHub during local preparation.
   fullscreen apps, lock/unlock and autostart after a fresh KDE login.
 
 Проверьте свои Flatpak-программы, сохранение тестовых документов, слышимость звука,
-перетаскивание и отсутствие захвата фокуса, несколько мониторов и новый вход в KDE.
+перетаскивание, блокировку и возврат фокуса, несколько мониторов и новый вход в KDE.
 Не используйте несохранённые важные документы для проверки SIGKILL.

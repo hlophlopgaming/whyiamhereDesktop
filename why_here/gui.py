@@ -34,6 +34,9 @@ def duration(seconds):
 class GoalDialog(QDialog):
 	def __init__(self, controller, key):
 		super().__init__()
+		self.controller, self.key = controller, key
+		self.setWindowFlag(Qt.WindowStaysOnTopHint)
+		self.setWindowModality(Qt.ApplicationModal)
 		self.setWindowTitle(tr("Зачем я здесь? — ") + controller.name(key))
 		self.setMinimumWidth(430)
 		layout = QFormLayout(self)
@@ -53,6 +56,9 @@ class GoalDialog(QDialog):
 		for minutes in (5, 15, 30):
 			button(tr("{minutes} мин").format(minutes=minutes), lambda checked=False, value=minutes: self.minutes.setValue(value), quick)
 		layout.addRow(tr("Быстрый выбор"), quick)
+		blocked = QLabel(tr("До начала сеанса окна программы заблокированы, а эту форму нельзя скрыть."))
+		blocked.setWordWrap(True)
+		layout.addRow(blocked)
 		note = QLabel(tr("В режиме принудительного завершения закрытие этой формы\nкрестиком или Escape завершит программу без сохранения."))
 		note.setWordWrap(True)
 		layout.addRow(note)
@@ -63,6 +69,24 @@ class GoalDialog(QDialog):
 		buttons.accepted.connect(lambda: controller.start_session(key, self.goal.text(), self.minutes.value()))
 		self.rejected.connect(lambda: controller.dismiss_form(key))
 		layout.addRow(buttons)
+
+	def reject(self):
+		if self.controller.stopping or self.controller.settings["end_mode"] == "kill":
+			super().reject()
+		else:
+			QTimer.singleShot(0, self.restore_focus)
+
+	def closeEvent(self, event):
+		if self.controller.stopping or self.controller.settings["end_mode"] == "kill":
+			super().closeEvent(event)
+		else:
+			event.ignore()
+			QTimer.singleShot(0, self.restore_focus)
+
+	def restore_focus(self):
+		self.show()
+		self.raise_()
+		self.activateWindow()
 
 
 class Reminder(QWidget):
@@ -385,7 +409,7 @@ class Controller(QObject):
 			else:
 				session.end_status = tr("Запрос закрытия отправлен")
 				close.append(command)
-		return close
+		return [*self.engine.blocks(), *close]
 
 	def warn(self, warnings):
 		for key in warnings:
@@ -404,13 +428,10 @@ class Controller(QObject):
 		if key not in self.forms:
 			self.forms[key] = GoalDialog(self, key)
 		form = self.forms[key]
-		form.setAttribute(Qt.WA_ShowWithoutActivating, automatic)
 		form.show()
-		if not automatic:
-			form.raise_()
-			form.activateWindow()
-		else:
-			QApplication.alert(form)
+		form.raise_()
+		form.activateWindow()
+		QApplication.alert(form)
 
 	def show_pending(self):
 		for key in self.engine.sessions:

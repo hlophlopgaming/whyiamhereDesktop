@@ -14,6 +14,7 @@ EN = {
 	" мин": " min",
 	"{minutes} мин": "{minutes} min",
 	"Быстрый выбор": "Quick choice",
+	"До начала сеанса окна программы заблокированы, а эту форму нельзя скрыть.": "Until the session starts, the application's windows are blocked and this form cannot be hidden.",
 	"Что тебе нужно в этой программе?": "What do you need to do in this app?",
 	"За сколько времени ты хочешь\nрешить свою проблему?": "How much time do you want\nto spend on this task?",
 	"В режиме принудительного завершения закрытие этой формы\nкрестиком или Escape завершит программу без сохранения.": "In force-quit mode, closing this form or pressing Escape\nwill terminate the app without saving.",

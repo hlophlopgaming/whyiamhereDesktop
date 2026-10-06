@@ -55,11 +55,14 @@ class Probe(QObject):
 
 	def snapshot(self, windows):
 		commands = Controller.snapshot(self, windows)
-		self.sent.extend(commands)
+		self.sent.extend(command for command in commands if command.get("action") != "block")
 		return commands
 
 	def name(self, key):
 		return "Тест закрытия формы"
+
+	def goals(self, key):
+		return []
 
 	def dismiss_form(self, key):
 		Controller.dismiss_form(self, key)
@@ -115,15 +118,17 @@ try:
 	probe.engine.configure([key])
 	wait_for(lambda: key in probe.engine.sessions and len(probe.engine.sessions[key].windows) == 2)
 	wait_for(lambda: any(identity(w) == "desktop:" + other for w in probe.engine.windows.values()))
-	print("KWin detected two selected windows and a separate control window", flush=True)
+	wait_for(lambda: all(w.get("minimized") for w in probe.engine.windows.values() if identity(w) == key))
+	print("KWin blocked and minimized two selected windows; the control window survived", flush=True)
 	if DISMISS:
 		form = GoalDialog(probe, key)
 		form.show()
-		app.processEvents()
+		wait_for(lambda: any(w.get("promptActive") for w in probe.engine.windows.values()))
 		form.close()
 		assert probe.engine.sessions[key].goal == ""
 	else:
 		probe.engine.start(key, "Завершить только тестовую программу", 1, MODE)
+		wait_for(lambda: all(not w.get("minimized") for w in probe.engine.windows.values() if identity(w) == key))
 		probe.engine.finish(key)
 	wait_for(lambda: children[0].poll() is not None)
 	wait_for(lambda: key not in probe.engine.sessions)

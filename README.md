@@ -18,6 +18,7 @@
 ## Features
 
 - Automatic window detection through KWin; select installed apps or open windows.
+- Pending apps are minimized and cannot be selected until their goal form is answered.
 - One shared session for all windows of an app, with independent timers for different apps.
 - A draggable, translucent reminder that does not take keyboard focus.
 - A red warning and a single sound before time runs out.
@@ -76,7 +77,7 @@ If the app is already running, a second launch opens its existing window.
 
 | Mode | At the deadline or via End session now | Dismissing an unanswered form |
 | --- | --- | --- |
-| **Close windows** — default | Normal close request; the app may ask you to save | The form remains pending and can be reopened from the tray |
+| **Close windows** — default | Normal close request; the app may ask you to save | The form stays open until a session is started |
 | **Force quit application (SIGKILL)** | Terminates window-owner processes and their current descendants | The close button, Escape or Alt+F4 also force quits the app |
 
 **SIGKILL does not offer a chance to save: unsaved work may be lost.** The action is fixed when a timer starts; dismissing a pending form uses the current setting. There is no Later button.
@@ -90,7 +91,7 @@ Closing the last normal window ends its session. Disabling tracking, removing an
 - Time spent asleep counts toward the deadline. Overdue sessions apply their action after resume.
 - Apps are identified by KWin IDs, not window titles. For unusual IDs, select an open window. Flatpak catalogues are supported, but individual apps need testing.
 - Force quit uses Linux pidfds. This utility, protected system processes and processes shared by different apps are excluded. Detached services and external automatic restarts are not controlled.
-- Use **Reconnect KWin** if the connection is lost. Wayland may prevent a form from automatically rising above other windows; reopen it from the tray.
+- Use **Reconnect KWin** if the connection is lost. Blocking and focus enforcement require an active KWin connection.
 
 ## Test and build
 
@@ -113,7 +114,7 @@ Build one executable:
 
 The executable includes Python and Qt but still depends on Linux system libraries. Building on a newer distribution does not guarantee compatibility with older ones. `build/` and `dist/` are excluded from Git; binaries belong in GitHub Releases. A standalone executable does not install its own menu entry; autostart is configured from the app settings.
 
-Create a release by pushing a version tag: `git tag v0.2.0 && git push origin v0.2.0`. The workflow checks that the tag matches `pyproject.toml`, runs the tests and publishes the binary with its SHA-256 checksum.
+Create a release by pushing a version tag: `git tag v0.3.0 && git push origin v0.3.0`. The workflow checks that the tag matches `pyproject.toml`, runs the tests and publishes the binary with its SHA-256 checksum.
 
 ## Uninstall
 

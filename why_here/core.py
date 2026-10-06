@@ -103,6 +103,13 @@ class Engine:
 		session.ended_manually = True
 		session.deadline = self.now()
 
+	def blocks(self):
+		return [
+			{"action": "block", "id": wid, "app": app}
+			for app, session in self.sessions.items() if session.deadline is None
+			for wid in sorted(session.windows)
+		]
+
 	def tick(self):
 		warnings, close = [], []
 		for app, session in self.sessions.items():
