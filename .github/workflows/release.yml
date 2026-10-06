@@ -39,7 +39,7 @@ jobs:
         run: |
           python build_binary.py
           mkdir -p release/why-here
-          cp dist/why-here LICENSE THIRD_PARTY.md CHANGELOG.md README.md README.ru.md release/why-here/
+          cp dist/why-here install-desktop.sh LICENSE THIRD_PARTY.md CHANGELOG.md README.md README.ru.md release/why-here/
           tar -C release -czf why-here-linux-x86_64.tar.gz why-here
           sha256sum why-here-linux-x86_64.tar.gz > why-here-linux-x86_64.tar.gz.sha256
       - name: Publish GitHub Release

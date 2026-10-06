@@ -4,6 +4,7 @@ import struct
 import tempfile
 import wave
 from pathlib import Path
+from importlib.metadata import version
 
 from PySide6.QtCore import QObject, Qt, QTimer, QUrl
 from PySide6.QtGui import QAction, QIcon, QPainter, QColor, QPalette
@@ -228,6 +229,11 @@ class SettingsWindow(QMainWindow):
 		else:
 			button(tr("Переподключить KWin"), controller.reconnect, row)
 		button(tr("Выйти"), controller.app.quit, row)
+		self.version_label = QLabel(f"v{version('why-am-i-here-kde')}")
+		font = self.version_label.font()
+		font.setPointSizeF(max(6, font.pointSizeF() - 2))
+		self.version_label.setFont(font)
+		layout.addWidget(self.version_label, alignment=Qt.AlignLeft)
 		self.refresh_apps()
 
 	def refresh_apps(self):

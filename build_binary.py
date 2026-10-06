@@ -16,6 +16,7 @@ def main():
 		sys.executable, "-m", "PyInstaller",
 		"--noconfirm", "--clean", "--onefile", "--name", "why-here",
 		"--paths", str(ROOT),
+		"--copy-metadata", "why-am-i-here-kde",
 		"--add-data", f"{ROOT / 'why_here/kwin.js'}:why_here",
 		"--add-data", f"{ROOT / 'why_here/assets'}:why_here/assets",
 		"--distpath", str(ROOT / "dist"),

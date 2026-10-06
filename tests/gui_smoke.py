@@ -4,9 +4,12 @@ from PySide6.QtTest import QTest
 from unittest.mock import patch
 from PySide6.QtWidgets import QApplication, QPushButton
 from why_here.gui import Controller
+from importlib.metadata import version
 
 app = QApplication([])
 c = Controller(app, demo=True)
+assert c.window.version_label.text() == f"v{version('why-am-i-here-kde')}"
+assert c.window.version_label.font().pointSizeF() < c.window.font().pointSizeF()
 c.new_demo()
 key = "desktop:demo1"
 c.settings["goals"][key] = ["Продолжить прошлую задачу"]

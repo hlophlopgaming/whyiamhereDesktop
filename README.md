@@ -61,7 +61,15 @@ Download the Linux archive from [GitHub Releases](https://github.com/hlophlopgam
 ./why-here
 ```
 
-The portable build does not add a KDE menu entry. Its autostart checkbox creates a local XDG entry for the extracted executable, so keep the file in a permanent location before enabling it.
+To add the app to the KDE menu, keep it in a permanent location and run from the release or source directory:
+
+```bash
+./install-desktop.sh
+```
+
+The script finds the executable alongside itself, in `.venv/bin/why-here`, or in `dist/why-here`. You can also pass its path: `./install-desktop.sh /path/to/why-here`. It creates `~/.local/share/applications/org.local.WhyHere.desktop` (respecting `XDG_DATA_HOME`), without `sudo`. Run it again after moving the app. The version appears in small text at the bottom left of the main window.
+
+The in-app autostart checkbox creates a separate local XDG entry to launch on KDE login.
 
 For a source installation, use the virtual environment from Quick start. The standard entry point is `.venv/bin/why-here`; no custom installer is required.
 
@@ -118,7 +126,7 @@ Create a release by pushing a version tag: `git tag v0.3.0 && git push origin v0
 
 ## Uninstall
 
-Disable autostart in Settings, then remove the extracted release directory or `.venv` from a source checkout. To clear preferences and goal suggestions, remove `~/.config/why-here`.
+Disable autostart in Settings, then remove the extracted release directory or `.venv` from a source checkout. To remove the menu entry, delete `${XDG_DATA_HOME:-$HOME/.local/share}/applications/org.local.WhyHere.desktop`. To clear preferences and goal suggestions, remove `~/.config/why-here`.
 
 ## Project layout
 
