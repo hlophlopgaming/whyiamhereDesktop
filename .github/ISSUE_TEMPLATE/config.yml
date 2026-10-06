@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: KDE KWin documentation
+    url: https://develop.kde.org/docs/plasma/kwin/
+    about: Check whether the issue concerns KWin scripting itself.

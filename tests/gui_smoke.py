@@ -8,15 +8,20 @@ from why_here.gui import Controller
 app = QApplication([])
 c = Controller(app, demo=True)
 c.new_demo()
-app.processEvents()
 key = "desktop:demo1"
+c.settings["goals"][key] = ["Продолжить прошлую задачу"]
+app.processEvents()
 assert key in c.forms
 assert not any(b.text() == "Позже" for b in c.forms[key].findChildren(QPushButton))
+assert c.forms[key].goal.completer().model().index(0, 0).data() == "Продолжить прошлую задачу"
+QTest.mouseClick(next(b for b in c.forms[key].findChildren(QPushButton) if b.text() == "5 мин"), Qt.LeftButton)
+assert c.forms[key].minutes.value() == 5
 c.forms[key].reject()
 assert c.engine.sessions[key].deadline is None
 c.show_pending()
 assert c.forms[key].isVisible()
 c.start_session(key, "Проверка GUI", 1)
+assert c.goals(key)[0] == "Проверка GUI"
 assert c.reminders[key].windowFlags() & Qt.WindowDoesNotAcceptFocus
 c.advance_demo(False)
 assert c.engine.sessions[key].warned

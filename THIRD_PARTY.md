@@ -17,7 +17,9 @@ Source distributions do not vendor these dependencies. A packaged executable
 contains third-party runtime libraries, so it must not be described as an
 MIT-only binary. Before publishing a binary release, include the required license
 notices and comply with the licenses of the actual libraries collected by the
-build. The repository's workflow tests source code; it does not publish binaries.
+build. The release workflow publishes the generated archive together with this
+notice; release maintainers remain responsible for checking the exact collected
+libraries before publishing a tag.
 
-The unused local `sounds/` directory is excluded from distribution. The warning
-sound used by the application is synthesized by the application's own code.
+The warning sound used by the application is synthesized by the application's
+own code.

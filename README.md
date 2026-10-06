@@ -22,8 +22,9 @@
 - A draggable, translucent reminder that does not take keyboard focus.
 - A red warning and a single sound before time runs out.
 - **End session now**, system tray controls and optional autostart.
+- Suggestions from the ten most recent goals for each app and 5, 15 and 30 minute shortcuts.
 - English and Russian interfaces using the KDE system palette.
-- Local settings, no accounts, analytics or goal history.
+- Local settings with no accounts or analytics.
 
 ## Requirements
 
@@ -37,8 +38,8 @@ Download or clone the source and open a terminal in the repository root:
 
 ```bash
 python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python -m why_here --demo --language en
+.venv/bin/python -m pip install -e .
+.venv/bin/why-here --demo --language en
 ```
 
 Click **New demo session**. The demo does not connect to KWin, save settings or terminate real applications.
@@ -46,23 +47,27 @@ Click **New demo session**. The demo does not connect to KWin, save settings or 
 For normal use:
 
 ```bash
-.venv/bin/python -m why_here --language en
+.venv/bin/why-here --language en
 ```
 
 Add an app, open one of its windows, enter your goal and duration, then click **Start**. No countdown runs before you answer. Switching windows or working in the background does not reset the timer.
 
-## Install in the KDE menu
+## Install
+
+Download the Linux archive from [GitHub Releases](https://github.com/hlophlopgaming/whyiamhereDesktop/releases), extract it and run:
 
 ```bash
-python3 install.py
+./why-here
 ```
 
-Installation is per-user, without `sudo`: a separate environment and app copy are placed in `~/.local/share/why-here`; the icon and menu entry go into the user's KDE directories. Dependencies are downloaded during installation only. Enable autostart in Settings if desired. Reinstalling updates the app while preserving settings.
+The portable build does not add a KDE menu entry. Its autostart checkbox creates a local XDG entry for the extracted executable, so keep the file in a permanent location before enabling it.
+
+For a source installation, use the virtual environment from Quick start. The standard entry point is `.venv/bin/why-here`; no custom installer is required.
 
 Select **Language / Язык (after restart)**, quit through the tray and reopen to apply it. You can also specify the language explicitly:
 
 ```bash
-.venv/bin/python -m why_here --language ru
+.venv/bin/why-here --language ru
 ```
 
 If the app is already running, a second launch opens its existing window.
@@ -81,7 +86,7 @@ Closing the last normal window ends its session. Disabling tracking, removing an
 ## Local data and limitations
 
 - Settings: `~/.config/why-here/settings.json`; autostart: `~/.config/autostart/org.local.WhyHere.desktop`. XDG path overrides are respected.
-- Goals and timers remain in memory only. After restarting the utility, open apps receive new forms.
+- The ten most recent unique goals for each app are stored locally for autocomplete. Timers remain in memory only, so open apps receive new forms after a restart.
 - Time spent asleep counts toward the deadline. Overdue sessions apply their action after resume.
 - Apps are identified by KWin IDs, not window titles. For unusual IDs, select an open window. Flatpak catalogues are supported, but individual apps need testing.
 - Force quit uses Linux pidfds. This utility, protected system processes and processes shared by different apps are excluded. Detached services and external automatic restarts are not controlled.
@@ -110,13 +115,7 @@ The executable includes Python and Qt but still depends on Linux system librarie
 
 ## Uninstall
 
-```bash
-python3 install.py --uninstall
-# Also remove settings:
-python3 install.py --uninstall --purge
-```
-
-If the source folder is gone, run `python3 ~/.local/share/why-here/install.py --uninstall`. This removes the installed copy, environment, icon, menu entry, autostart and loaded KWin script. The source folder is left intact.
+Disable autostart in Settings, then remove the extracted release directory or `.venv` from a source checkout. To clear preferences and goal suggestions, remove `~/.config/why-here`.
 
 ## Project layout
 
@@ -127,9 +126,9 @@ If the source folder is gone, run `python3 ~/.local/share/why-here/install.py --
 | `why_here/bridge.py`, `kwin.js` | KWin integration over D-Bus |
 | `why_here/processes.py`, `storage.py` | Process handling and local settings |
 | `tests/` | Automated and integration checks |
-| `install.py`, `build_binary.py` | Installation and executable packaging |
+| `pyproject.toml`, `build_binary.py` | Python package and executable packaging |
 
-[Contributing](CONTRIBUTING.md) · [Testing](TESTING.md)
+[Testing](TESTING.md)
 
 ## License
 

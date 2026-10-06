@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "why-am-i-here-kde"
+version = "0.2.0"
+description = "Purpose and time limits for applications on KDE Plasma 6"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = ["kde", "kwin", "plasma", "productivity", "wayland"]
+classifiers = [
+	"Development Status :: 4 - Beta",
+	"Operating System :: POSIX :: Linux",
+	"Programming Language :: Python :: 3",
+]
+dependencies = ["PySide6>=6.7,<7"]
+
+[project.scripts]
+why-here = "why_here.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/hlophlopgaming/whyiamhereDesktop"
+Issues = "https://github.com/hlophlopgaming/whyiamhereDesktop/issues"
+
+[tool.setuptools]
+packages = ["why_here"]
+
+[tool.setuptools.package-data]
+why_here = ["kwin.js", "assets/*"]

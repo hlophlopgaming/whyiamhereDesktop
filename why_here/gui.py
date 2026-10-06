@@ -9,7 +9,7 @@ from PySide6.QtCore import QObject, Qt, QTimer, QUrl
 from PySide6.QtGui import QAction, QIcon, QPainter, QColor, QPalette
 from PySide6.QtMultimedia import QSoundEffect
 from PySide6.QtWidgets import (
-	QApplication, QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFormLayout,
+	QApplication, QCheckBox, QComboBox, QCompleter, QDialog, QDialogButtonBox, QFormLayout,
 	QHBoxLayout, QHeaderView, QLabel, QLineEdit, QListWidget, QListWidgetItem,
 	QMainWindow, QMenu, QMessageBox, QPushButton, QSlider, QSpinBox, QGraphicsOpacityEffect,
 	QSystemTrayIcon, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget,
@@ -17,7 +17,7 @@ from PySide6.QtWidgets import (
 
 from .core import APP_ID, Engine, clock, identity
 from .processes import Processes
-from .storage import DEFAULTS, AUTOSTART, installed_apps, read_settings, save_settings, set_autostart
+from .storage import DEFAULTS, AUTOSTART, installed_apps, read_settings, remember_goal, save_settings, set_autostart
 
 
 def button(text, function, layout):
@@ -40,12 +40,19 @@ class GoalDialog(QDialog):
 		self.goal = QLineEdit()
 		self.goal.setMaxLength(500)
 		self.goal.setPlaceholderText(tr("Например: ответить на письмо"))
+		self.goal.setCompleter(QCompleter(controller.goals(key), self.goal))
+		self.goal.completer().setCaseSensitivity(Qt.CaseInsensitive)
+		self.goal.completer().setFilterMode(Qt.MatchContains)
 		self.minutes = QSpinBox()
 		self.minutes.setRange(1, 1440)
 		self.minutes.setValue(controller.settings["minutes"])
 		self.minutes.setSuffix(tr(" мин"))
 		layout.addRow(tr("Что тебе нужно в этой программе?"), self.goal)
 		layout.addRow(tr("За сколько времени ты хочешь\nрешить свою проблему?"), self.minutes)
+		quick = QHBoxLayout()
+		for minutes in (5, 15, 30):
+			button(tr("{minutes} мин").format(minutes=minutes), lambda checked=False, value=minutes: self.minutes.setValue(value), quick)
+		layout.addRow(tr("Быстрый выбор"), quick)
 		note = QLabel(tr("В режиме принудительного завершения закрытие этой формы\nкрестиком или Escape завершит программу без сохранения."))
 		note.setWordWrap(True)
 		layout.addRow(note)
@@ -277,7 +284,7 @@ class Controller(QObject):
 		super().__init__()
 		self.app, self.demo = app, demo
 		self.stopping = False
-		self.settings, error = (DEFAULTS | {"apps": {}}, "") if demo else read_settings()
+		self.settings, error = (DEFAULTS | {"apps": {}, "goals": {}}, "") if demo else read_settings()
 		self.settings["language"] = language or self.settings["language"]
 		set_language(self.settings["language"])
 		self.engine = Engine()
@@ -291,9 +298,10 @@ class Controller(QObject):
 		with wave.open(str(path), "wb") as sound:
 			sound.setparams((1, 2, 22050, 0, "NONE", "not compressed"))
 			sound.writeframes(b"".join(struct.pack("<h", int(9000 * math.sin(2 * math.pi * 660 * i / 22050) * min(1, i / 220, (6600 - i) / 220))) for i in range(6600)))
-		self.sound = QSoundEffect(self)
-		self.sound.setSource(QUrl.fromLocalFile(str(path)))
-		self.sound.setVolume(0.5)
+		self.sound = None if demo else QSoundEffect(self)
+		if self.sound:
+			self.sound.setSource(QUrl.fromLocalFile(str(path)))
+			self.sound.setVolume(0.5)
 		self.window = SettingsWindow(self)
 		icon = QIcon(str(Path(__file__).with_name("assets") / "icon.png"))
 		app.setWindowIcon(icon)
@@ -323,6 +331,17 @@ class Controller(QObject):
 
 	def name(self, key):
 		return self.settings["apps"].get(key, key.removeprefix("desktop:").removeprefix("class:"))
+
+	def goals(self, key):
+		return self.settings["goals"].get(key, [])
+
+	def remember_goal(self, key, goal):
+		remember_goal(self.settings, key, goal)
+		if not self.demo:
+			try:
+				save_settings(self.settings)
+			except OSError as error:
+				QMessageBox.warning(self.window, tr("Не удалось сохранить настройки"), str(error))
 
 	def configure(self, save=True):
 		added = self.engine.configure(self.settings["apps"], self.settings["enabled"], self.settings["warning"] * 60)
@@ -370,7 +389,7 @@ class Controller(QObject):
 
 	def warn(self, warnings):
 		for key in warnings:
-			if self.settings["sound"]:
+			if self.settings["sound"] and self.sound:
 				self.sound.play()
 
 	def show_settings(self):
@@ -407,6 +426,7 @@ class Controller(QObject):
 		if key not in self.engine.sessions:
 			return
 		self.engine.start(key, goal, minutes, self.settings["end_mode"])
+		self.remember_goal(key, goal)
 		self.forms[key].hide()
 		reminder = Reminder(lambda: self.finish_session(key))
 		self.reminders[key] = reminder
@@ -468,5 +488,6 @@ class Controller(QObject):
 			self.bridge.stop()
 		self.processes.close()
 		self.tray.hide()
-		self.sound.stop()
+		if self.sound:
+			self.sound.stop()
 		self.sound_dir.cleanup()

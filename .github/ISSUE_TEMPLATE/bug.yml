@@ -1,0 +1,46 @@
+name: Bug report
+description: Report broken or unexpected behavior
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Please do not include private goals or document titles.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Include exact steps and the expected result.
+    validations:
+      required: true
+  - type: input
+    id: plasma
+    attributes:
+      label: Plasma version
+      placeholder: 6.7.4
+    validations:
+      required: true
+  - type: dropdown
+    id: session
+    attributes:
+      label: Session type
+      options: [Wayland, X11, Unknown]
+    validations:
+      required: true
+  - type: input
+    id: app-id
+    attributes:
+      label: Tracked application ID
+      description: Copy the ID shown in Settings, if relevant.
+  - type: dropdown
+    id: install
+    attributes:
+      label: Installation method
+      options: [GitHub Release binary, pip/source, Other]
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant output
+      render: shell

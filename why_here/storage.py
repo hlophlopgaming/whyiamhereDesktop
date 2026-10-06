@@ -4,6 +4,7 @@ import configparser
 import json
 import os
 from pathlib import Path
+import sys
 
 from .core import APP_ID
 
@@ -11,7 +12,13 @@ CONFIG = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
 DATA = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local/share"))
 SETTINGS = CONFIG / "why-here/settings.json"
 AUTOSTART = CONFIG / "autostart" / (APP_ID + ".desktop")
-DEFAULTS = {"apps": {}, "minutes": 15, "warning": 2, "sound": True, "opacity": 80, "enabled": True, "end_mode": "windows", "language": "ru"}
+DEFAULTS = {"apps": {}, "goals": {}, "minutes": 15, "warning": 2, "sound": True, "opacity": 80, "enabled": True, "end_mode": "windows", "language": "ru"}
+
+
+def remember_goal(settings, app, goal):
+	goal = goal.strip()
+	history = settings.setdefault("goals", {}).setdefault(app, [])
+	history[:] = [goal, *(old for old in history if old != goal)][:10]
 
 
 def read_settings():
@@ -28,11 +35,22 @@ def read_settings():
 			result[key] = max(low, min(high, int(result[key])))
 		if not isinstance(result["apps"], dict) or not all(isinstance(k, str) and isinstance(v, str) for k, v in result["apps"].items()):
 			raise ValueError(tr("Неверный список программ"))
+		result["apps"] = dict(result["apps"])
+		goals = result.get("goals", {})
+		if not isinstance(goals, dict):
+			goals = {}
+		result["goals"] = {}
+		for app, history in goals.items():
+			if not isinstance(app, str) or not isinstance(history, list):
+				continue
+			for goal in reversed(history):
+				if isinstance(goal, str) and goal.strip():
+					remember_goal(result, app, goal)
 		return result, ""
 	except FileNotFoundError:
-		return DEFAULTS | {"apps": {}}, ""
+		return DEFAULTS | {"apps": {}, "goals": {}}, ""
 	except (ValueError, TypeError, OSError) as error:
-		return DEFAULTS | {"apps": {}}, tr("Не удалось прочитать настройки: {error}").format(error=error)
+		return DEFAULTS | {"apps": {}, "goals": {}}, tr("Не удалось прочитать настройки: {error}").format(error=error)
 
 
 def save_settings(settings):
@@ -45,11 +63,16 @@ def save_settings(settings):
 
 def set_autostart(enabled):
 	if enabled:
-		source = DATA / "applications" / (APP_ID + ".desktop")
-		if not source.exists():
-			raise OSError(tr("Сначала выполните установку: python3 install.py"))
+		roots = [DATA, *map(Path, os.environ.get("XDG_DATA_DIRS", "/usr/local/share:/usr/share").split(":"))]
+		source = next((root / "applications" / (APP_ID + ".desktop") for root in roots if (root / "applications" / (APP_ID + ".desktop")).exists()), None)
 		AUTOSTART.parent.mkdir(parents=True, exist_ok=True)
-		AUTOSTART.write_text(source.read_text().replace(" --show", " --background"))
+		if source:
+			content = source.read_text().replace(" --show", " --background")
+		else:
+			arguments = [sys.executable] if getattr(sys, "frozen", False) else [sys.executable, "-m", "why_here"]
+			command = " ".join('"' + value.replace("\\", "\\\\").replace('"', '\\"').replace("$", "\\$").replace("`", "\\`") + '"' for value in arguments)
+			content = f"[Desktop Entry]\nType=Application\nName=Why am I here?\nExec={command} --background\nTerminal=false\n"
+		AUTOSTART.write_text(content)
 	else:
 		AUTOSTART.unlink(missing_ok=True)
 

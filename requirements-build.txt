@@ -1,2 +1,2 @@
--r requirements.txt
+-e .
 PyInstaller==6.22.3
