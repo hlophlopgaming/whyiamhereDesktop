@@ -1,0 +1,23 @@
+# Local environments and Python cache
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Build products belong in GitHub Releases, not Git history
+build/
+dist/
+*.log
+
+# Local settings and credentials
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+.DS_Store
+
+# Unused local audio with unverified provenance; generated audio is used at runtime
+/sounds/

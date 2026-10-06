@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="160" viewBox="0 0 720 160">
+<rect width="720" height="160" rx="24" fill="#202326"/>
+<g transform="translate(16 16)"><rect x="8" y="8" width="112" height="112" rx="30" fill="#6356d9"/>
+<path d="M64 27a34 34 0 1 1-24 58l-8 12 3-27A34 34 0 0 1 64 27Z" fill="none" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+<path d="M64 44v22l15 9" fill="none" stroke="#b7f7cf" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="64" cy="66" r="5" fill="#b7f7cf"/></g>
+<text x="168" y="76" fill="#ffffff" font-family="sans-serif" font-size="43" font-weight="600">Why am I here?</text>
+<text x="170" y="114" fill="#b7f7cf" font-family="sans-serif" font-size="22">One purpose. A little time.</text>
+</svg>
