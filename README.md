@@ -1,93 +1,93 @@
 <p align="center">
-	<img src="why_here/assets/logo-ru.svg" alt="Зачем я здесь?" width="640">
+	<img src="why_here/assets/logo-en.svg" alt="Why am I here?" width="640">
 </p>
 
 <p align="center">
-	<strong>Пользуйтесь программами с целью, а не по привычке.</strong><br>
+	<strong>Use your apps with purpose, not out of habit.</strong><br>
 	Linux · KDE Plasma 6 · Wayland · Python / PySide6 · MIT
 </p>
 
 <p align="center">
-	<strong>Русский</strong> · <a href="README.en.md">English</a>
+	<a href="README.ru.md">Русский</a> · <strong>English</strong>
 </p>
 
-**«Зачем я здесь?»** спрашивает, зачем вы открыли выбранную программу и сколько времени хотите в ней провести. Затем показывает цель и обратный отсчёт поверх окон. По окончании — закрывает окна или принудительно завершает программу, в зависимости от выбранного режима.
+**Why am I here?** asks why you opened a tracked app and how much time you want to spend in it. A floating reminder displays your goal and countdown. When time runs out, it closes the windows or force quits the application, according to your chosen mode.
 
-![Главное окно](artifacts/settings.png)
+![Main window](artifacts/settings-en.png)
 
-## Возможности
+## Features
 
-- Автоматическое обнаружение окон через KWin; добавление из установленных приложений или открытых окон.
-- Одна общая сессия для всех окон программы и независимые таймеры разных программ.
-- Перетаскиваемое полупрозрачное напоминание без захвата клавиатурного фокуса.
-- Красное предупреждение и однократный звук перед окончанием времени.
-- Кнопка **«Завершить сейчас»**, системный трей и автозапуск.
-- Русский и английский интерфейс, системная палитра KDE.
-- Локальные настройки, без аккаунтов, аналитики и истории целей.
+- Automatic window detection through KWin; select installed apps or open windows.
+- One shared session for all windows of an app, with independent timers for different apps.
+- A draggable, translucent reminder that does not take keyboard focus.
+- A red warning and a single sound before time runs out.
+- **End session now**, system tray controls and optional autostart.
+- English and Russian interfaces using the KDE system palette.
+- Local settings, no accounts, analytics or goal history.
 
-## Требования
+## Requirements
 
-**Linux с KDE Plasma 6 и Wayland**, Python **3.10+**, PySide6 **6.7+**. Основное тестовое окружение: EndeavourOS, Plasma 6.7.4, Python 3.14, PySide6 6.11.2. Plasma 5 и другие рабочие окружения не поддерживаются.
+**Linux with KDE Plasma 6 and Wayland**, Python **3.10+**, PySide6 **6.7+**. The main test environment is EndeavourOS, Plasma 6.7.4, Python 3.14 and PySide6 6.11.2. Plasma 5 and other desktop environments are not supported.
 
-На Arch / EndeavourOS при отсутствии Python установите `python`. На Debian / Ubuntu с уже установленной Plasma 6 могут потребоваться `python3`, `python3-venv`, `libegl1`, `libopengl0`, `libxkbcommon0`, `libxcb-cursor0`, `libpulse0`. Эти библиотеки обеспечивают работу графики и звука Qt.
+On Arch / EndeavourOS, install `python` if needed. On Debian / Ubuntu with Plasma 6 already installed, you may need `python3`, `python3-venv`, `libegl1`, `libopengl0`, `libxkbcommon0`, `libxcb-cursor0` and `libpulse0`. These libraries support Qt graphics and audio.
 
-## Быстрый запуск
+## Quick start
 
-Скачайте исходники или клонируйте репозиторий, откройте терминал в его корневой папке:
+Download or clone the source and open a terminal in the repository root:
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python -m why_here --demo
+.venv/bin/python -m why_here --demo --language en
 ```
 
-Нажмите **«Новая демо-сессия»**. Демонстрация не подключается к KWin, не сохраняет настройки и не закрывает реальные программы.
+Click **New demo session**. The demo does not connect to KWin, save settings or terminate real applications.
 
-Для обычной работы:
-
-```bash
-.venv/bin/python -m why_here
-```
-
-Добавьте программу, откройте её окно, введите цель и время, нажмите **«Начать»**. До ответа отсчёт не идёт. Переключение между окнами и работа в фоне не сбрасывают таймер.
-
-## Установка в меню KDE
-
-```bash
-python3 install.py
-```
-
-Установка для текущего пользователя, без `sudo`: отдельное окружение и приложение размещаются в `~/.local/share/why-here`, иконка и пункт меню добавляются в пользовательские каталоги KDE. Зависимости скачиваются только при установке. Автозапуск включается флажком в настройках. Повторная установка обновляет приложение, сохраняя настройки.
-
-Выбор **«Язык / Language (после перезапуска)»** применяется после выхода через трей и повторного запуска. Можно указать язык явно:
+For normal use:
 
 ```bash
 .venv/bin/python -m why_here --language en
 ```
 
-Если программа уже работает, повторный запуск открывает существующее окно.
+Add an app, open one of its windows, enter your goal and duration, then click **Start**. No countdown runs before you answer. Switching windows or working in the background does not reset the timer.
 
-## Как завершаются сессии
+## Install in the KDE menu
 
-| Режим | По окончании или по кнопке «Завершить сейчас» | Закрытие формы без ответа |
+```bash
+python3 install.py
+```
+
+Installation is per-user, without `sudo`: a separate environment and app copy are placed in `~/.local/share/why-here`; the icon and menu entry go into the user's KDE directories. Dependencies are downloaded during installation only. Enable autostart in Settings if desired. Reinstalling updates the app while preserving settings.
+
+Select **Language / Язык (after restart)**, quit through the tray and reopen to apply it. You can also specify the language explicitly:
+
+```bash
+.venv/bin/python -m why_here --language ru
+```
+
+If the app is already running, a second launch opens its existing window.
+
+## How sessions end
+
+| Mode | At the deadline or via End session now | Dismissing an unanswered form |
 | --- | --- | --- |
-| **Закрыть окна** — по умолчанию | Обычный запрос закрытия; программа может предложить сохранить документ | Форма остаётся ожидающей, доступна через трей |
-| **Принудительно завершить программу (SIGKILL)** | Завершение процессов владельцев окон и их текущих потомков | Крестик, Escape или Alt+F4 также принудительно завершают программу |
+| **Close windows** — default | Normal close request; the app may ask you to save | The form remains pending and can be reopened from the tray |
+| **Force quit application (SIGKILL)** | Terminates window-owner processes and their current descendants | The close button, Escape or Alt+F4 also force quits the app |
 
-**SIGKILL не даёт сохранить документы: несохранённые данные могут потеряться.** Режим фиксируется при начале таймера; закрытие ожидающей формы использует текущую настройку. Кнопки «Позже» нет.
+**SIGKILL does not offer a chance to save: unsaved work may be lost.** The action is fixed when a timer starts; dismissing a pending form uses the current setting. There is no Later button.
 
-Закрытие последнего обычного окна завершает сессию. Отключение отслеживания, удаление программы из списка и выход из самой утилиты отменяют сессии без завершения программ. Закрытие главного окна утилиты прячет её в трей.
+Closing the last normal window ends its session. Disabling tracking, removing an app from the list or quitting this utility cancels sessions without terminating tracked apps. Closing the utility's main window hides it in the tray.
 
-## Локальные данные и ограничения
+## Local data and limitations
 
-- Настройки: `~/.config/why-here/settings.json`; автозапуск: `~/.config/autostart/org.local.WhyHere.desktop`. Учитываются XDG-переменные путей.
-- Цели и таймеры хранятся только в памяти. После перезапуска открытые программы получают новые формы.
-- Таймер учитывает сон компьютера. После пробуждения просроченная сессия применяет выбранное действие.
-- Приложения определяются по ID KWin, а не по заголовкам. При нестандартном ID добавьте программу через открытое окно. Flatpak-каталоги поддержаны, но конкретные приложения требуют проверки.
-- Принудительное завершение использует Linux pidfd. Собственные, служебные и общие для разных приложений процессы защищены. Отдельные службы, отделившиеся процессы и внешний автоматический перезапуск не контролируются.
-- При потере связи нажмите **«Переподключить KWin»**. Ограничения Wayland могут мешать автоматическому поднятию формы; откройте её из трея.
+- Settings: `~/.config/why-here/settings.json`; autostart: `~/.config/autostart/org.local.WhyHere.desktop`. XDG path overrides are respected.
+- Goals and timers remain in memory only. After restarting the utility, open apps receive new forms.
+- Time spent asleep counts toward the deadline. Overdue sessions apply their action after resume.
+- Apps are identified by KWin IDs, not window titles. For unusual IDs, select an open window. Flatpak catalogues are supported, but individual apps need testing.
+- Force quit uses Linux pidfds. This utility, protected system processes and processes shared by different apps are excluded. Detached services and external automatic restarts are not controlled.
+- Use **Reconnect KWin** if the connection is lost. Wayland may prevent a form from automatically rising above other windows; reopen it from the tray.
 
-## Проверка и сборка
+## Test and build
 
 ```bash
 .venv/bin/python -m unittest discover -s tests -v
@@ -96,41 +96,41 @@ QT_QPA_PLATFORM=offscreen .venv/bin/python -m tests.startup_smoke
 QT_QPA_PLATFORM=offscreen .venv/bin/python -m tests.english_smoke
 ```
 
-Настоящие тесты KWin, включая SIGKILL, описаны в [TESTING.md](TESTING.md). GitHub Actions проверяет логику и GUI без дисплея; это не заменяет проверку в KDE.
+Real KWin tests, including SIGKILL, are described in [TESTING.md](TESTING.md). GitHub Actions checks logic and headless GUI behavior; it does not replace testing in KDE.
 
-Сборка одного исполняемого файла:
+Build one executable:
 
 ```bash
 .venv/bin/python -m pip install -r requirements-build.txt
 .venv/bin/python build_binary.py
-./dist/why-here --demo
+./dist/why-here --demo --language en
 ```
 
-Бинарник содержит Python и Qt, но зависит от системных библиотек Linux. Сборка на новом дистрибутиве не гарантирует запуск на старом. Каталоги `build/` и `dist/` исключены из Git; готовые сборки предназначены для GitHub Releases. Сам бинарник не устанавливает пункт меню или автозапуск.
+The executable includes Python and Qt but still depends on Linux system libraries. Building on a newer distribution does not guarantee compatibility with older ones. `build/` and `dist/` are excluded from Git; binaries belong in GitHub Releases. A standalone executable does not install its own menu entry or autostart integration.
 
-## Удаление
+## Uninstall
 
 ```bash
 python3 install.py --uninstall
-# Также удалить настройки:
+# Also remove settings:
 python3 install.py --uninstall --purge
 ```
 
-Если исходники удалены: `python3 ~/.local/share/why-here/install.py --uninstall`. Удаляются установленная копия, окружение, иконка, пункт меню, автозапуск и загруженный скрипт KWin. Исходная папка остаётся.
+If the source folder is gone, run `python3 ~/.local/share/why-here/install.py --uninstall`. This removes the installed copy, environment, icon, menu entry, autostart and loaded KWin script. The source folder is left intact.
 
-## Устройство проекта
+## Project layout
 
-| Файлы | Назначение |
+| Files | Purpose |
 | --- | --- |
-| `why_here/core.py` | Сессии и таймеры |
-| `why_here/gui.py`, `i18n.py`, `assets/` | Интерфейс, переводы и логотипы |
-| `why_here/bridge.py`, `kwin.js` | Интеграция с KWin через D-Bus |
-| `why_here/processes.py`, `storage.py` | Управление процессами и локальные настройки |
-| `tests/` | Автоматические и интеграционные проверки |
-| `install.py`, `build_binary.py` | Установка и сборка |
+| `why_here/core.py` | Sessions and timers |
+| `why_here/gui.py`, `i18n.py`, `assets/` | UI, translations and brand assets |
+| `why_here/bridge.py`, `kwin.js` | KWin integration over D-Bus |
+| `why_here/processes.py`, `storage.py` | Process handling and local settings |
+| `tests/` | Automated and integration checks |
+| `install.py`, `build_binary.py` | Installation and executable packaging |
 
-[Участие в разработке](CONTRIBUTING.md) · [Проверки](TESTING.md)
+[Contributing](CONTRIBUTING.md) · [Testing](TESTING.md)
 
-## Лицензия
+## License
 
-Оригинальный код, документация и логотипы проекта распространяются по **[MIT](LICENSE)**. Зависимости сохраняют собственные лицензии — см. [THIRD_PARTY.md](THIRD_PARTY.md).
+Original project code, documentation and brand assets are available under the **[MIT License](LICENSE)**. Dependencies retain their own licenses; see [THIRD_PARTY.md](THIRD_PARTY.md).

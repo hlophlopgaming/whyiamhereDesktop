@@ -58,7 +58,7 @@ def main():
 	subprocess.run([str(python), "-m", "pip", "install", "-r", str(SOURCE / "requirements.txt")], check=True)
 	stop_running()
 	shutil.copytree(SOURCE / "why_here", TARGET / "why_here", dirs_exist_ok=True, ignore=shutil.ignore_patterns("__pycache__"))
-	for name in ("README.md", "README.en.md", "TESTING.md", "LICENSE", "THIRD_PARTY.md", "requirements.txt", "install.py"):
+	for name in ("README.md", "README.ru.md", "TESTING.md", "LICENSE", "THIRD_PARTY.md", "requirements.txt", "install.py"):
 		shutil.copy2(SOURCE / name, TARGET / name)
 	launcher = TARGET / "launch.py"
 	launcher.write_text("from why_here.__main__ import main\nraise SystemExit(main())\n")
