@@ -18,6 +18,3 @@ dist/
 .idea/
 .vscode/
 .DS_Store
-
-# Unused local audio with unverified provenance; generated audio is used at runtime
-/sounds/
